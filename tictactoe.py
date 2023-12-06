@@ -5,12 +5,17 @@
    and return the choice
 '''
 from random import randint
+
+#global variables
 global p1
 global p2
 global turn
 global bool_exit
 p1 = ""
 p2 = ""
+
+
+#board initialization function
 def initialize_board():
         tttboard= [
             ["_"+"  (1)","_"+"  (2)","_"+"  (3)"],
@@ -19,6 +24,7 @@ def initialize_board():
         ]
         return tttboard
 
+#2 players choose using single choice function
 def player_choice(player, other_player):
     global p1, p2  # Declare p1 and p2 as global variables
     choice = ""
@@ -39,6 +45,7 @@ def player_choice(player, other_player):
     print(f"{player}: {p1}\n{other_player}: {p2}\n\n")
     return choice
 
+# function to randomly assign 1st turn to either player
 def randb_turn():
      global turn
      x = randint(1, 10)
@@ -51,9 +58,6 @@ def randb_turn():
         player_choice("player2", "player1")
         print("player2 plays first")
         turn = 2
-
-
-count=0
 
 # function to print the board in 2d manner
 global board
@@ -83,10 +87,12 @@ def winner():
             or
             board[0][2]==board[1][1]==board[2][0]
            ):
-             return True                     #loop variable that will exit the game
+            return True                     #loop variable that will exit the game
     else:
             return False
     return bool_exit
+
+#function to be executed if player wants to play again
 def play_again(again):
     global bool_exit
     global board
@@ -99,12 +105,21 @@ def play_again(again):
     if again=="y":
                 board=initialize_board()
                 game_start()
-                    
-    else:
-            bool_exit=True          
 
+def index_check(index,keys,dict1,pturn):
+        if pturn==0:
+            if index not in keys or index not in dict1.keys():
+                while(index not in keys or index not in dict1.keys()):
+                    index=str(input("P1- Enter Index(1-9): "))
+        else:
+            if index not in keys or index not in dict1.keys():
+                while(index not in keys or index not in dict1.keys()):
+                    index=str(input("P1- Enter Index(1-9): "))
+        return index    
 
- #the actaul game
+     
+                
+#the actaul game
 def game_start():
     #dictionary to map 2d board to single index
     dict1={
@@ -116,24 +131,29 @@ def game_start():
     #list of valid indexes to be taken as input from players
     keys=list(dict1.keys())
 
+    #decide turn
     randb_turn()
+
+    #variable to keep track if player wants to play again
     again=""
+
     print_board()
+
     bool_exit=False
     while(
          True
          ):
             if(turn==1):
-                p1_index=str(input("P1- Enter Index(1-9): ")) 
+                
+                p1_index=str(input("P1- Enter Index(1-9): "))
+                pturn=0
                 #ask player1 to place X/O on the given indices
                 #this block is used to check if a repeated value has been entered or an invalid value
                 #this is to prevent overwriting of p1 and p2
                 #for a valid input, from the list of valid indices that valid input is removed
                 #when a repeated value of entered by p2/p1 the value is not found in the list and
                 #while loop condition is satisfied which asks for a valid value to come out of the loop
-                if p1_index not in keys or p1_index not in dict1.keys():
-                    while(p1_index not in keys or p1_index not in dict1.keys()):
-                        p1_index=str(input("P1- Enter Index(1-9): "))    
+                p1_index=index_check(p1_index,keys,dict1,pturn) 
             
                 board[dict1[p1_index][0]][dict1[p1_index][1]]=p1
                 #assign the X/O to the index entered by player
@@ -144,26 +164,25 @@ def game_start():
                 print_board()
                 #print the board to see the outcome
 
+                #check winner
                 bool_exit=winner()
-                #TIE checking
                 if bool_exit==True:
                     print("\t!!!Player1 Wins!!!")
                     play_again(again)
                     break
                     
+                #TIE checking
                 if(keys.count("done")==9):
                     print("\t!!!TIE!!!")
                     play_again(again)
-
-            
+                    break
 
                 #outcome is decided from winner function which shall turn the exit variable true
                 #this way game is exited when there is a winner
 
                 p2_index=str(input("P2- Enter Index(1-9): "))
-                if p2_index not in keys or p2_index not in dict1.keys():
-                    while(p2_index not in keys or p2_index not in dict1.keys()):
-                        p2_index=str(input("P2- Enter Index(1-9): "))
+                pturn=1
+                p2_index=index_check(p2_index,keys,dict1,pturn)
 
                 keys[keys.index(p2_index)]="done"
                 
@@ -171,21 +190,20 @@ def game_start():
                 
                 print_board()
                 bool_exit=winner()
-                #TIE checking
                 
                 if bool_exit==True:
                     print("\t!!!Player2 Wins!!!")
                     play_again(again)
+                    break
                 if(keys.count("done")==9):
                     print("!!!TIE!!!")
                     play_again(again)
+                    break
                     
-
             else:
                 p2_index=str(input("P2- Enter Index(1-9): "))
-                if p2_index not in keys or p2_index not in dict1.keys():
-                    while(p2_index not in keys or p2_index not in dict1.keys()):
-                        p2_index=str(input("P2- Enter Index(1-9): "))
+                pturn=1
+                p2_index=index_check(p2_index,keys,dict1,pturn)
 
                 keys[keys.index(p2_index)]="done"
                 
@@ -202,12 +220,12 @@ def game_start():
                 if(keys.count("done")==9):
                     print("\t!!!TIE!!!")
                     play_again(again)
+                    break
                     
-                    
-                p1_index=str(input("P1- Enter Index(1-9): ")) 
-                if p1_index not in keys or p1_index not in dict1.keys():
-                    while(p1_index not in keys or p1_index not in dict1.keys()):
-                        p1_index=str(input("P1- Enter Index(1-9): "))    
+                
+                p1_index=str(input("P1- Enter Index(1-9): "))
+                pturn=0 
+                p1_index=index_check(p1_index,keys,dict1,pturn)    
             
                 board[dict1[p1_index][0]][dict1[p1_index][1]]=p1
                 keys[keys.index(p1_index)]="done"
@@ -223,4 +241,5 @@ def game_start():
                 if(keys.count("done")==9):
                     print("\t!!!TIE!!!")
                     play_again(again)
+                    break
 game_start()
