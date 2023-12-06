@@ -8,6 +8,7 @@ from random import randint
 global p1
 global p2
 global turn
+global bool_exit
 p1 = ""
 p2 = ""
 def initialize_board():
@@ -82,21 +83,25 @@ def winner():
             or
             board[0][2]==board[1][1]==board[2][0]
            ):
-             bool_exit=True                     #loop variable that will exit the game
+             return True                     #loop variable that will exit the game
     else:
             return False
     return bool_exit
 def play_again(again):
+    global bool_exit
+    global board
+    bool_exit=False
     print("PLAY AGAIN?\n")
     again=input("y/n\n")
     if again not in ["y","n"]:
             while(again not in ["y","n"]):
                 again=input("y/n\n")
-                if again=="y":
-                    board=initialize_board()
-                    game_start()
-                else:
-                    break           
+    if again=="y":
+                board=initialize_board()
+                game_start()
+                    
+    else:
+            bool_exit=True          
 
 
  #the actaul game
@@ -144,6 +149,7 @@ def game_start():
                 if bool_exit==True:
                     print("\t!!!Player1 Wins!!!")
                     play_again(again)
+                    break
                     
                 if(keys.count("done")==9):
                     print("\t!!!TIE!!!")
@@ -191,10 +197,12 @@ def game_start():
             
                 if bool_exit==True:
                     print("\t!!!Player2 Wins!!!")
-                    play_again(again)  
+                    play_again(again)
+                    break  
                 if(keys.count("done")==9):
                     print("\t!!!TIE!!!")
                     play_again(again)
+                    
                     
                 p1_index=str(input("P1- Enter Index(1-9): ")) 
                 if p1_index not in keys or p1_index not in dict1.keys():
