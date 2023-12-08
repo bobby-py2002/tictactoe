@@ -38,11 +38,12 @@ def player_choice(player, other_player):
     if player == "player1":
         p1 = choice
         p2 = "O" if p1 == "X" else "X"
+        print(f"{player}: {p1}\n{other_player}: {p2}\n\n")
     elif player == "player2":
         p2 = choice
         p1 = "O" if p2 == "X" else "X"
+        print(f"{player}: {p2}\n{other_player}: {p1}\n\n")
     
-    print(f"{player}: {p1}\n{other_player}: {p2}\n\n")
     return choice
 
 # function to randomly assign 1st turn to either player
@@ -59,9 +60,10 @@ def randb_turn():
         print("player2 plays first")
         turn = 2
 
-# function to print the board in 2d manner
 global board
 board=initialize_board()
+
+# function to print the board in 2d manner
 def print_board():
     for i in range(0,3):
         for j in range(0,3):
@@ -90,8 +92,7 @@ def winner():
             return True                     #loop variable that will exit the game
     else:
             return False
-    return bool_exit
-
+    
 #function to be executed if player wants to play again
 def play_again(again):
     global bool_exit
@@ -146,13 +147,14 @@ def game_start():
             if(turn==1):
                 
                 p1_index=str(input("P1- Enter Index(1-9): "))
+                '''ask player1 to place X/O on the given indices
+                   this block is used to check if a repeated value has been entered or an invalid value
+                   this is to prevent overwriting of p1 and p2
+                   for a valid input, from the list of valid indices that valid input is removed
+                   when a repeated value of entered by p2/p1 the value is not found in the list and
+                   while loop condition is satisfied which asks for a valid value to come out of the loop'''
+                
                 pturn=0
-                #ask player1 to place X/O on the given indices
-                #this block is used to check if a repeated value has been entered or an invalid value
-                #this is to prevent overwriting of p1 and p2
-                #for a valid input, from the list of valid indices that valid input is removed
-                #when a repeated value of entered by p2/p1 the value is not found in the list and
-                #while loop condition is satisfied which asks for a valid value to come out of the loop
                 p1_index=index_check(p1_index,keys,dict1,pturn) 
             
                 board[dict1[p1_index][0]][dict1[p1_index][1]]=p1
